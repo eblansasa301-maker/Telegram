@@ -11875,6 +11875,21 @@ public class MessagesStorage extends BaseController {
             if (ephemeralMessages != null) {
                 putEphemeralMessages(ephemeralMessages, withTransaction);
             }
+
+            // sLgram: track consecutive communication days for private chats.
+            if (mode == ChatActivity.MODE_DEFAULT) {
+                final long selfId = getUserConfig().getClientUserId();
+                for (int i = 0; i < messages.size(); i++) {
+                    final TLRPC.Message message = messages.get(i);
+                    if (message == null || message.action != null || message.date <= 0) {
+                        continue;
+                    }
+                    final long dialogId = MessageObject.getDialogId(message);
+                    if (dialogId > 0 && dialogId != selfId) {
+                        StreakManager.record(currentAccount, dialogId, message.date);
+                    }
+                }
+            }
         }
 
         boolean databaseInTransaction = false;

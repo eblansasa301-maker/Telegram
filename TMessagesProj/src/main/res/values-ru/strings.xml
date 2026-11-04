@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">Telegram</string>
-    <string name="AppNameBeta">Telegram Beta</string>
+    <string name="AppName">sLgram</string>
+    <string name="AppNameBeta">sLgram Beta</string>
     <string name="LanguageName">Русский</string>
     <string name="English">Английский</string>
     <string name="LanguageNameInEnglish">Russian</string>
@@ -263,4 +263,26 @@
     <string name="RemindTodayAt">\'Отправить сегодня в\' HH:mm</string>
     <string name="RemindDayAt">\'Отправить\' d MMM \'в\' HH:mm</string>
     <string name="RemindDayYearAt">\'Напомнить\' d MMM yyyy \'в\' HH:mm</string>
+
+    <!-- sLgram communication streak -->
+    <string name="ProfileStreak">Серия общения</string>
+    <string name="ProfileStreakMutual">Взаимное общение</string>
+    <plurals name="ProfileStreakDays">
+        <item quantity="one">%1$d день подряд</item>
+        <item quantity="few">%1$d дня подряд</item>
+        <item quantity="many">%1$d дней подряд</item>
+        <item quantity="other">%1$d дня подряд</item>
+    </plurals>
+    <plurals name="ProfileStreakTotal">
+        <item quantity="one">Всего %1$d день</item>
+        <item quantity="few">Всего %1$d дня</item>
+        <item quantity="many">Всего %1$d дней</item>
+        <item quantity="other">Всего %1$d дня</item>
+    </plurals>
+    <plurals name="ProfileStreakMilestone">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дня</item>
+    </plurals>
 </resources>

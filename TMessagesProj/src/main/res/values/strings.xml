@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">Telegram</string>
-    <string name="AppNameBeta">Telegram Beta</string>
+    <string name="AppName">sLgram</string>
+    <string name="AppNameBeta">sLgram Beta</string>
     <string name="LanguageName">English</string>
     <string name="English">English</string>
     <string name="LanguageNameInEnglish">English</string>
@@ -11630,4 +11630,20 @@
     <string name="NoPaidMessagesTokenUsed">un1 used your QR code and can message you for free</string>
     <string name="NoPaidMessagesTokenUsedOut">You used the QR code of un1 and can message them for free</string>
     <string name="NoPaidMessagesTokenImported">You can now message **%1$s** for free.</string>
+
+    <!-- sLgram communication streak -->
+    <string name="ProfileStreak">Communication streak</string>
+    <string name="ProfileStreakMutual">Mutual communication</string>
+    <plurals name="ProfileStreakDays">
+        <item quantity="one">%1$d day in a row</item>
+        <item quantity="other">%1$d days in a row</item>
+    </plurals>
+    <plurals name="ProfileStreakTotal">
+        <item quantity="one">%1$d day in total</item>
+        <item quantity="other">%1$d days in total</item>
+    </plurals>
+    <plurals name="ProfileStreakMilestone">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
 </resources>

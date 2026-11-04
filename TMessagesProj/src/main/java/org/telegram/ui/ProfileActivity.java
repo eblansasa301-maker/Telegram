@@ -162,6 +162,7 @@ import org.telegram.messenger.NotificationsController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.SendMessagesHelper;
 import org.telegram.messenger.SharedConfig;
+import org.telegram.messenger.StreakManager;
 import org.telegram.messenger.SvgHelper;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.UserObject;
@@ -277,6 +278,7 @@ import org.telegram.ui.Components.ShareAlert;
 import org.telegram.ui.Components.SharedMediaLayout;
 import org.telegram.ui.Components.SizeNotifierFrameLayout;
 import org.telegram.ui.Components.StarRatingView;
+import org.telegram.ui.Components.StreakCardView;
 import org.telegram.ui.Components.StickerEmptyView;
 import org.telegram.ui.Components.TagEditCell;
 import org.telegram.ui.Components.TimerDrawable;
@@ -658,6 +660,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int infoHeaderRowEmpty;
     private int infoEndRowEmpty;
     private int phoneRow;
+    private int streakRow;
+    private int streakDays;
+    private int streakTotal;
     private int noteRow;
     private int locationRow;
     private int userInfoRow;
@@ -10563,6 +10568,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         infoHeaderRowEmpty = -1;
         infoEndRowEmpty = -1;
         phoneRow = -1;
+        streakRow = -1;
+        streakDays = 0;
+        streakTotal = 0;
         noteRow = -1;
         userInfoRow = -1;
         locationRow = -1;
@@ -10750,6 +10758,14 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     if (channel != null && (ChatObject.isPublic(channel) || !ChatObject.isNotInChat(channel))) {
                         channelRow = rowCount++;
                         channelDividerRow = rowCount++;
+                    }
+                }
+                if (!isBot && !myProfile && user != null && !UserObject.isUserSelf(user)) {
+                    final StreakManager.StreakInfo streakInfo = StreakManager.getInfo(currentAccount, userId);
+                    if (streakInfo.isVisible()) {
+                        streakDays = streakInfo.visibleStreak;
+                        streakTotal = streakInfo.totalDays;
+                        streakRow = rowCount++;
                     }
                 }
                 infoStartRow = rowCount;
@@ -13171,7 +13187,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 VIEW_TYPE_TEXT_DETAIL_MULTILINE_2 = 30,
                 VIEW_TYPE_EMPTY2 = 31,
                 VIEW_TYPE_TEXT2 = 32,
-                VIEW_TYPE_LINKED_COMMUNITY = 33
+                VIEW_TYPE_LINKED_COMMUNITY = 33,
+                VIEW_TYPE_STREAK = 34
                         ;
 
         private Context mContext;
@@ -13415,6 +13432,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         }
                     };
                     break;
+                case VIEW_TYPE_STREAK:
+                    view = new StreakCardView(mContext);
+                    view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+                    break;
                 case VIEW_TYPE_BOT_APP:
                     FrameLayout frameLayout = new FrameLayout(mContext);
                     ButtonWithCounterView button = new ButtonWithCounterView(mContext, resourcesProvider);
@@ -13485,6 +13506,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             switch (holder.getItemViewType()) {
+                case VIEW_TYPE_STREAK:
+                    ((StreakCardView) holder.itemView).setStreakData(streakDays, streakTotal);
+                    break;
                 case VIEW_TYPE_HEADER:
                     HeaderCell headerCell = (HeaderCell) holder.itemView;
                     if (position == infoHeaderRow) {
@@ -14359,7 +14383,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             int type = holder.getItemViewType();
             return type != VIEW_TYPE_HEADER && type != VIEW_TYPE_DIVIDER && type != VIEW_TYPE_SHADOW &&
                     type != VIEW_TYPE_EMPTY && type != VIEW_TYPE_EMPTY2 && type != VIEW_TYPE_HEADER_EMPTY && type != VIEW_TYPE_BOTTOM_PADDING && type != VIEW_TYPE_SHARED_MEDIA &&
-                    type != 9 && type != 10 && type != VIEW_TYPE_BOT_APP && type != VIEW_TYPE_TEXT2; // These are legacy ones, left for compatibility
+                    type != VIEW_TYPE_STREAK && type != 9 && type != 10 && type != VIEW_TYPE_BOT_APP && type != VIEW_TYPE_TEXT2; // These are legacy ones, left for compatibility
         }
 
         @Override
@@ -14369,7 +14393,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
         @Override
         public int getItemViewType(int position) {
-            if (position == infoHeaderRow || position == membersHeaderRow || position == settingsSectionRow2 ||
+            if (position == streakRow) {
+                return VIEW_TYPE_STREAK;
+            } else if (position == infoHeaderRow || position == membersHeaderRow || position == settingsSectionRow2 ||
                     position == numberSectionRow || position == helpHeaderRow || position == debugHeaderRow || position == botPermissionsHeader) {
                 return VIEW_TYPE_HEADER;
             } else if (position == phoneRow || position == locationRow || position == numberRow || position == birthdayRow) {
